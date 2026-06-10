@@ -5,7 +5,6 @@ var jump_pad_preload = preload("res://player/jump_pad/jump_pad.tscn")
 @onready var background = $player/background
 
 func _ready() -> void:
-	print(player.global_position)
 	player.connect("double_jump_signal", _double_jump)
 	background.scale.x = int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080))
 	background.scale.y = int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080))

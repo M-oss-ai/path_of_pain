@@ -8,6 +8,8 @@
 [node name="main" type="Node2D" unique_id=910124730]
 script = ExtResource("1_pjrb6")
 
+[node name="colisions" parent="." unique_id=1721047019 instance=ExtResource("3_xwkvk")]
+
 [node name="player" parent="." unique_id=792090552 instance=ExtResource("2_xwkvk")]
 
 [node name="Camera" type="Camera2D" parent="player" unique_id=2043505598]
@@ -15,5 +17,3 @@ script = ExtResource("1_pjrb6")
 [node name="background" type="Sprite2D" parent="player" unique_id=1449389649]
 z_index = -300
 texture = ExtResource("3_c651c")
-
-[node name="colisions" parent="." unique_id=1721047019 instance=ExtResource("3_xwkvk")]

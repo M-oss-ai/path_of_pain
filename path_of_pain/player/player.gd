@@ -12,7 +12,7 @@ const WALL_SLIDE_DRAG = 7
 
 const DASH_DURATION = 0.3
 const DASH_COOLDOWN_DURATION = 0.17
-const WALL_FIXE_DURATION = 0.1
+const WALL_FIXE_DURATION = 0.5
 const WALL_JUMP_DURATION = 0.2
 
 var dash_timer = 0.0
@@ -27,6 +27,7 @@ var is_dashing = false
 var is_in_dash_cooldown = false
 var is_wall_fixed = false
 var is_wall_sliding = false
+var hase_quitte_wall = true
 
 
 var last_direction = 1.0
@@ -52,7 +53,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and can_dash and not is_dashing and not is_in_dash_cooldown:
 		dash()
 	
-	
+	if is_wall_fixed:
+		process_wall_fixe(delta)
+		
 	if is_dashing:
 		process_dash(delta)
 		
@@ -66,10 +69,10 @@ func gravity(delta):
 	if is_on_floor():
 		can_double_jump = true
 		can_dash = true
-	elif is_dashing:
+	elif is_dashing or is_wall_fixed:
 		velocity.y = 0
 	elif is_wall_sliding:
-		velocity += get_gravity() * delta / WALL_SLIDE_DRAG
+		velocity.y += 400 * delta
 	else:
 		velocity += get_gravity() * delta
 
@@ -83,12 +86,29 @@ func move():
 			velocity.x = 0
 
 func look_at_wall():
-	if is_on_wall() and velocity.y >= 0:
-		is_wall_sliding = true
+	if is_on_wall() and not is_on_floor():
 		can_double_jump = true
 		can_dash = true
+		if velocity.y >= 0 and not is_wall_fixed and not is_wall_sliding and hase_quitte_wall:
+			hase_quitte_wall = false
+			is_wall_fixed = true
+			wall_fixe_timer = WALL_FIXE_DURATION
+		elif velocity.y < 0:
+			is_wall_sliding = false
+			is_wall_fixed = false
+			hase_quitte_wall = true
+			
 	else:
 		is_wall_sliding = false
+		is_wall_fixed = false
+		hase_quitte_wall = true
+
+func process_wall_fixe(delta):
+	wall_fixe_timer -= delta
+	
+	if wall_fixe_timer <= 0:
+		is_wall_fixed = false
+		is_wall_sliding = true
 
 func jump():
 	velocity.y = JUMP_VELOCITY

@@ -1,10 +1,8 @@
 extends Area2D
 
-@export var tp_location = Vector2(0, 0)
-
 
 func _ready() -> void:
-	tp_location.y -= 16
+	pass
 
 
 func _process(delta: float) -> void:
@@ -13,4 +11,5 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "player":
-		body.tp_location = tp_location
+		body.tp_location = global_position
+		body.tp_location.y -= 16
