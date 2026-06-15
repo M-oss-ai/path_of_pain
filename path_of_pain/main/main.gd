@@ -6,9 +6,10 @@ var jump_pad_preload = preload("res://player/jump_pad/jump_pad.tscn")
 
 func _ready() -> void:
 	player.connect("double_jump_signal", _double_jump)
-	background.scale.x = int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080))
-	background.scale.y = int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080))
-	
+	print(background.scale.x)
+	background.scale.x += int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080)) - 1
+	background.scale.y += int(max(DisplayServer.screen_get_size().x / 1920, DisplayServer.screen_get_size().y / 1080)) - 1
+	print(background.scale.x)
 
 
 func _process(delta: float) -> void:
@@ -32,6 +33,4 @@ func quitte():
 
 func tp():
 	player.global_position = player.tp_location
-	player.velocity.y = 0
-	player.velocity.x = 0
-	player.end_dash()
+	player.reset()

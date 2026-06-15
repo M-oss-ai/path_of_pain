@@ -11,15 +11,14 @@ const CRISTAL_DASH_SPEED = 900
 const JUMP_VELOCITY = -500.0
 const DOUBLE_JUMP_VELOCITY = -500.0
 const WALL_JUMP_VELOCITY = -500.0
-const WALL_SLIDE_VELOCITY = 350
+const WALL_SLIDE_VELOCITY = 9000
 
 # ========= DURATION =========
 const DURATION = {
 	"dash" : 0.3, 
 	"dash_cooldown" : 0.17, 
-	"wall_fixe" : 0.1, 
 	"wall_jump" : 0.13, 
-	"charge_crystal_dash" : 1.5, 
+	"charge_crystal_dash" : 1.0, 
 	"crystal_dash_cooldown" : 0.5
 }
 
@@ -30,19 +29,16 @@ const DURATION = {
 var timer = {
 	"dash" : 0.0, 
 	"dash_cooldown" : 0.0, 
-	"wall_fixe" : 0.0, 
 	"wall_jump" : 0.0, 
 	"charge_crystal_dash" : 0.0, 
 	"crystal_dash_cooldown" : 0.0
 }
 
-# ========= player_status =========
-var player_status = {
+# ========= status =========
+var status = {
 	"is_dashing" : false, 
 	"is_in_dash_cooldown" : false, 
-	"is_wall_fixed" : false, 
 	"is_wall_sliding" : false, 
-	"hase_quitte_wall" : true, 
 	"is_wall_jumping" : false, 
 	"is_charging_crystal_dash" : false, 
 	"is_cristal_dashing" : false, 
@@ -70,49 +66,47 @@ func _physics_process(delta: float) -> void:
 	look_at_wall()
 	
 	# ================== actions ==================
-	if Input.is_action_just_pressed("jump") and not player_status["is_charging_crystal_dash"] and not player_status["is_crystal_dash_ready"] and not player_status["is_cristal_dashing"] and not player_status["is_in_crystal_dash_cooldown"]:
-		if is_on_floor() and not player_status["is_dashing"]:
+	if Input.is_action_just_pressed("jump") and not status["is_charging_crystal_dash"] and not status["is_crystal_dash_ready"] and not status["is_cristal_dashing"] and not status["is_in_crystal_dash_cooldown"]:
+		if is_on_floor() and not status["is_dashing"]:
 			jump()
 			
 		elif is_on_wall():
 			wall_jump()
 			
-		elif player_status["can_double_jump"] and not player_status["is_dashing"]:
+		elif status["can_double_jump"] and not status["is_dashing"]:
 			double_jump()
 	
-	if Input.is_action_just_pressed("dash") and player_status["can_dash"] and not player_status["is_dashing"] and not player_status["is_in_dash_cooldown"] and not player_status["is_charging_crystal_dash"] and not player_status["is_crystal_dash_ready"] and not player_status["is_cristal_dashing"] and not player_status["is_in_crystal_dash_cooldown"]:
+	if Input.is_action_just_pressed("dash") and status["can_dash"] and not status["is_dashing"] and not status["is_in_dash_cooldown"] and not status["is_charging_crystal_dash"] and not status["is_crystal_dash_ready"] and not status["is_cristal_dashing"] and not status["is_in_crystal_dash_cooldown"]:
 		dash()
 	
-	if Input.is_action_just_pressed("cristal dash") and (is_on_wall() or is_on_floor()) and not player_status["is_dashing"]:
+	if Input.is_action_just_pressed("cristal dash") and (is_on_wall() or is_on_floor()) and not status["is_dashing"]:
 		charge_crystal_dash()
 		
 	if Input.is_action_just_released("cristal dash"):
-		if player_status["is_charging_crystal_dash"]:
+		if status["is_charging_crystal_dash"]:
 			end_charge_crystal_dash()
-		elif player_status["is_crystal_dash_ready"]:
+		elif status["is_crystal_dash_ready"]:
 			crystal_dash()
 	
-	if (Input.is_action_just_pressed("cristal dash") or Input.is_action_just_pressed("jump")) and player_status["is_cristal_dashing"]:
+	if (Input.is_action_just_pressed("cristal dash") or Input.is_action_just_pressed("jump")) and status["is_cristal_dashing"]:
 		end_cristal_dash()
 	
 	
 	# ================== process ==================
-	if player_status["is_wall_fixed"]:
-		process_wall_fixe(delta)
 		
-	if player_status["is_dashing"]:
+	if status["is_dashing"]:
 		process_dash(delta)
 		
-	elif player_status["is_in_dash_cooldown"]:
+	elif status["is_in_dash_cooldown"]:
 		dash_cooldown(delta)
 	
-	if player_status["is_wall_jumping"]:
+	if status["is_wall_jumping"]:
 		process_wall_jump(delta)
 	
-	if player_status["is_charging_crystal_dash"]:
+	if status["is_charging_crystal_dash"]:
 		process_charge_crystal_dash(delta)
 		
-	if player_status["is_in_crystal_dash_cooldown"]:
+	if status["is_in_crystal_dash_cooldown"]:
 		cristal_dash_cooldown(delta)
 		
 	move_and_slide()
@@ -122,31 +116,34 @@ func _physics_process(delta: float) -> void:
 func gravity(delta):
 	# Add the gravity.
 	if is_on_floor():
-		player_status["can_double_jump"] = true
-		player_status["can_dash"] = true
-	elif player_status["is_dashing"] or player_status["is_wall_fixed"] or player_status["is_charging_crystal_dash"] or player_status["is_crystal_dash_ready"] or player_status["is_cristal_dashing"] or player_status["is_in_crystal_dash_cooldown"]:
+		status["can_double_jump"] = true
+		status["can_dash"] = true
+	elif status["is_dashing"] or status["is_charging_crystal_dash"] or status["is_crystal_dash_ready"] or status["is_cristal_dashing"] or status["is_in_crystal_dash_cooldown"]:
 		velocity.y = 0
-	elif player_status["is_wall_sliding"]:
-		velocity.y += WALL_SLIDE_VELOCITY * delta
+		print("1 + " + str(velocity.y))
+	elif status["is_wall_sliding"]:
+		velocity.y = WALL_SLIDE_VELOCITY * delta
+		print("2 + " + str(velocity.y))
 	else:
 		velocity += get_gravity() * delta
+		print("3 + " + str(velocity.y))
 
 # ================== move ==================
 func move(delta):
 	var direction := Input.get_axis("left", "right")
-	if player_status["is_wall_jumping"]:
+	if status["is_wall_jumping"]:
 		direction = last_direction
 		
-	if player_status["is_cristal_dashing"]:
+	if status["is_cristal_dashing"]:
 		velocity.x = CRISTAL_DASH_SPEED * last_direction
 		
-	elif player_status["is_in_crystal_dash_cooldown"]:
+	elif status["is_in_crystal_dash_cooldown"]:
 		velocity.x = move_toward(velocity.x, 0.0, (CRISTAL_DASH_SPEED / DURATION["crystal_dash_cooldown"]) * delta)
 	
-	elif player_status["is_charging_crystal_dash"] or player_status["is_crystal_dash_ready"]:
+	elif status["is_charging_crystal_dash"] or status["is_crystal_dash_ready"]:
 		velocity.x = 0
 			
-	elif not player_status["is_dashing"]:
+	elif not status["is_dashing"]:
 		if direction:
 			last_direction = direction
 			velocity.x = SPEED * direction
@@ -156,42 +153,29 @@ func move(delta):
 # ================== look_at_wall ==================
 func look_at_wall():
 	if is_on_wall():
-		if player_status["is_dashing"] and wall_direction != last_direction:
+		if status["is_dashing"] and wall_direction != last_direction:
 			end_dash()
-			player_status["is_in_dash_cooldown"] = true
+			status["is_in_dash_cooldown"] = true
 			timer["dash_cooldown"] = DURATION["dash_cooldown"]
 		
-		if player_status["is_cristal_dashing"] and wall_direction != last_direction:
+		if status["is_cristal_dashing"] and wall_direction != last_direction:
 			end_cristal_dash()
 				
 		if not is_on_floor():
 			wall_direction = sign(get_wall_normal().x)
 				
 			last_direction = wall_direction
-			player_status["can_double_jump"] = true
-			player_status["can_dash"] = true
+			status["can_double_jump"] = true
+			status["can_dash"] = true
 				
-			if velocity.y >= 0 and not player_status["is_wall_fixed"] and not player_status["is_wall_sliding"] and player_status["hase_quitte_wall"]:
-				player_status["hase_quitte_wall"] = false
-				player_status["is_wall_fixed"] = true
-				timer["wall_fixe"] = DURATION["wall_fixe"]
+			if velocity.y >= 0:
+				status["is_wall_sliding"] = true
 				
-			elif velocity.y < 0:
-				player_status["is_wall_sliding"] = false
-				player_status["is_wall_fixed"] = false
-				player_status["hase_quitte_wall"] = true
+			else:
+				status["is_wall_sliding"] = false
 	else:
 		wall_direction = 0.0
-		player_status["is_wall_sliding"] = false
-		player_status["is_wall_fixed"] = false
-		player_status["hase_quitte_wall"] = true
-
-func process_wall_fixe(delta):
-	timer["wall_fixe"] -= delta
-	
-	if timer["wall_fixe"] <= 0:
-		player_status["is_wall_fixed"] = false
-		player_status["is_wall_sliding"] = true
+		status["is_wall_sliding"] = false
 
 # ================== jump ==================
 func jump():
@@ -201,37 +185,34 @@ func jump():
 # ================== double_jump ==================
 func double_jump():
 	velocity.y = DOUBLE_JUMP_VELOCITY
-	player_status["can_double_jump"] = false
+	status["can_double_jump"] = false
 	emit_signal("double_jump_signal")
 	
 	
 # ================== wall_jump ==================
 func wall_jump():
 	velocity.y = WALL_JUMP_VELOCITY
-	player_status["is_wall_sliding"] = false
-	player_status["is_wall_fixed"] = false
-	player_status["hase_quitte_wall"] = true
-	player_status["is_wall_jumping"] = true
+	status["is_wall_sliding"] = false
+	status["is_wall_jumping"] = true
 	timer["wall_jump"] = DURATION["wall_jump"]
 
 func process_wall_jump(delta):
 	timer["wall_jump"] -= delta
 	
 	if timer["wall_jump"] <= 0:
-		last_direction = -last_direction
-		player_status["is_wall_jumping"] = false
+		status["is_wall_jumping"] = false
 		
 
 # ================== dash ==================
 func dash():
-	player_status["is_dashing"] = true
+	status["is_dashing"] = true
 	timer["dash"] = DURATION["dash"]
 	
-	if player_status["is_wall_jumping"]:
-		player_status["is_wall_jumping"] = false
+	if status["is_wall_jumping"]:
+		status["is_wall_jumping"] = false
 	
 	if not is_on_floor() and not is_on_wall():
-		player_status["can_dash"] = false
+		status["can_dash"] = false
 
 func process_dash(delta):
 	timer["dash"] -= delta
@@ -239,7 +220,7 @@ func process_dash(delta):
 	
 	if timer["dash"] <= 0:
 		end_dash()
-		player_status["is_in_dash_cooldown"] = true
+		status["is_in_dash_cooldown"] = true
 		timer["dash_cooldown"] = DURATION["dash_cooldown"]
 
 func dash_cooldown(delta):
@@ -249,19 +230,19 @@ func dash_cooldown(delta):
 		end_dash_couldown()
 		
 func end_dash():
-	player_status["is_dashing"] = false
+	status["is_dashing"] = false
 
 func end_dash_couldown():
-	player_status["is_in_dash_cooldown"] = false
+	status["is_in_dash_cooldown"] = false
 	
 
 # ================== crystal_dash ==================
 func crystal_dash():
-	player_status["is_crystal_dash_ready"] = false
-	player_status["is_cristal_dashing"] = true
+	status["is_crystal_dash_ready"] = false
+	status["is_cristal_dashing"] = true
 	
 func charge_crystal_dash():
-	player_status["is_charging_crystal_dash"] = true
+	status["is_charging_crystal_dash"] = true
 	timer["charge_crystal_dash"] = DURATION["charge_crystal_dash"]
 
 func process_charge_crystal_dash(delta):
@@ -269,18 +250,25 @@ func process_charge_crystal_dash(delta):
 	
 	if timer["charge_crystal_dash"] <= 0:
 		end_charge_crystal_dash()
-		player_status["is_crystal_dash_ready"] = true
+		status["is_crystal_dash_ready"] = true
 
 func end_charge_crystal_dash():
-	player_status["is_charging_crystal_dash"] = false
+	status["is_charging_crystal_dash"] = false
 
 func end_cristal_dash():
-	player_status["is_cristal_dashing"] = false
-	player_status["is_in_crystal_dash_cooldown"] = true
+	status["is_cristal_dashing"] = false
+	status["is_in_crystal_dash_cooldown"] = true
 	timer["crystal_dash_cooldown"] = DURATION["crystal_dash_cooldown"]
 
 func cristal_dash_cooldown(delta):
 	timer["crystal_dash_cooldown"] -= delta
 	
 	if timer["crystal_dash_cooldown"] <= 0:
-		player_status["is_in_crystal_dash_cooldown"] = false
+		status["is_in_crystal_dash_cooldown"] = false
+
+func reset():
+	velocity.y = 0
+	velocity.x = 0
+	end_dash()
+	status["can_dash"] = true
+	status["can_double_jump"] = true
