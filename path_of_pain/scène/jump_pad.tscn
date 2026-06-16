@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b43ben7002je7"]
 
-[ext_resource type="Texture2D" uid="uid://iavep131ncdd" path="res://player/jump_pad/jump_pad.png" id="1_g6emj"]
-[ext_resource type="Script" uid="uid://ckqtxvxk1qwe0" path="res://player/jump_pad/jump_pad.gd" id="2_edukc"]
+[ext_resource type="Texture2D" uid="uid://iavep131ncdd" path="res://assets/player/jump_pad/jump_pad.png" id="1_g6emj"]
+[ext_resource type="Script" uid="uid://ckqtxvxk1qwe0" path="res://script/jump_pad.gd" id="2_edukc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_edukc"]
 atlas = ExtResource("1_g6emj")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b035fodg8tfp7"]
 
-[ext_resource type="Script" uid="uid://ckvbdol08hs82" path="res://player/player.gd" id="1_ou4ca"]
+[ext_resource type="Script" uid="uid://ckvbdol08hs82" path="res://script/player.gd" id="1_ou4ca"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_oul6g"]
 load_path = "res://.godot/imported/knight.png-708266efadfecae8e171a09210f1058d.ctex"

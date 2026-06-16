@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cbp56iip5rk1n"]
+
+[ext_resource type="Script" uid="uid://csq034sedjpm0" path="res://script/damage_zone.gd" id="1_23nfm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_23nfm"]
+radius = 32.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_23nfm"]
+size = Vector2(384, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d43gr"]
+size = Vector2(32, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c40e4"]
+size = Vector2(32, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p0wcf"]
+size = Vector2(224, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wtqsy"]
+size = Vector2(192, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uvx30"]
+size = Vector2(32, 32)
+
+[node name="damage_zone" type="Area2D" unique_id=168882222]
+script = ExtResource("1_23nfm")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="." unique_id=88627797]
+position = Vector2(-320, -480)
+shape = SubResource("CircleShape2D_23nfm")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="." unique_id=1705504624]
+position = Vector2(-512, 208)
+shape = SubResource("RectangleShape2D_23nfm")
+
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="." unique_id=1164357304]
+position = Vector2(-720, 112)
+shape = SubResource("RectangleShape2D_d43gr")
+
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="." unique_id=2112401411]
+position = Vector2(-1136, -32)
+shape = SubResource("RectangleShape2D_c40e4")
+
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="." unique_id=841064943]
+position = Vector2(-1008, -112)
+shape = SubResource("RectangleShape2D_p0wcf")
+
+[node name="CollisionShape2D16" type="CollisionShape2D" parent="." unique_id=65634472]
+position = Vector2(-800, -48)
+shape = SubResource("RectangleShape2D_wtqsy")
+
+[node name="CollisionShape2D17" type="CollisionShape2D" parent="." unique_id=1667286064]
+position = Vector2(-880, -80)
+shape = SubResource("RectangleShape2D_uvx30")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0ajn3u1304qi"
-path="res://.godot/imported/Attaque_Hit-box.png-4f0342b0e4ae5edecd4907967e3063d9.ctex"
+uid="uid://iavep131ncdd"
+path="res://.godot/imported/jump_pad.png-6155c0ff35a95666fd1e18651798bbc2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://player/Attaque_Hit-box.png"
-dest_files=["res://.godot/imported/Attaque_Hit-box.png-4f0342b0e4ae5edecd4907967e3063d9.ctex"]
+source_file="res://assets/player/jump_pad/jump_pad.png"
+dest_files=["res://.godot/imported/jump_pad.png-6155c0ff35a95666fd1e18651798bbc2.ctex"]
 
 [params]
 

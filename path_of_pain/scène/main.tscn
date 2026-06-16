@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dhrjgdodtih1a"]
+
+[ext_resource type="Script" uid="uid://bp6fc0nv1s0g6" path="res://script/main.gd" id="1_xbick"]
+[ext_resource type="PackedScene" uid="uid://46igjeu2qopo" path="res://scène/colisions.tscn" id="2_3h6qa"]
+[ext_resource type="PackedScene" uid="uid://cbp56iip5rk1n" path="res://scène/damage_zone.tscn" id="2_6qwk5"]
+[ext_resource type="PackedScene" uid="uid://b035fodg8tfp7" path="res://scène/player.tscn" id="3_6qwk5"]
+[ext_resource type="Texture2D" uid="uid://lfxeset3j6i" path="res://assets/background.jpg" id="4_ecdjs"]
+
+[node name="main" type="Node2D" unique_id=910124730]
+script = ExtResource("1_xbick")
+
+[node name="player" parent="." unique_id=792090552 instance=ExtResource("3_6qwk5")]
+
+[node name="Camera" type="Camera2D" parent="player" unique_id=2043505598]
+
+[node name="background" type="Sprite2D" parent="player" unique_id=1449389649]
+z_index = -300
+position = Vector2(0, 9.536743e-07)
+scale = Vector2(1, 1.1333333)
+texture = ExtResource("4_ecdjs")
+
+[node name="damage_zone" parent="." unique_id=168882222 instance=ExtResource("2_6qwk5")]
+
+[node name="colisions" parent="." unique_id=1721047019 instance=ExtResource("2_3h6qa")]

@@ -120,13 +120,10 @@ func gravity(delta):
 		status["can_dash"] = true
 	elif status["is_dashing"] or status["is_charging_crystal_dash"] or status["is_crystal_dash_ready"] or status["is_cristal_dashing"] or status["is_in_crystal_dash_cooldown"]:
 		velocity.y = 0
-		print("1 + " + str(velocity.y))
 	elif status["is_wall_sliding"]:
 		velocity.y = WALL_SLIDE_VELOCITY * delta
-		print("2 + " + str(velocity.y))
 	else:
 		velocity += get_gravity() * delta
-		print("3 + " + str(velocity.y))
 
 # ================== move ==================
 func move(delta):
@@ -264,11 +261,27 @@ func cristal_dash_cooldown(delta):
 	timer["crystal_dash_cooldown"] -= delta
 	
 	if timer["crystal_dash_cooldown"] <= 0:
-		status["is_in_crystal_dash_cooldown"] = false
+		end_cristal_dash_cooldown()
 
+func end_cristal_dash_cooldown():
+	status["is_in_crystal_dash_cooldown"] = false
+
+# ================== emit by another ==================
 func reset():
-	velocity.y = 0
-	velocity.x = 0
 	end_dash()
+	end_cristal_dash_cooldown()
+	end_charge_crystal_dash()
+	status["is_cristal_dashing"] = false
+	status["is_crystal_dash_ready"] = false
 	status["can_dash"] = true
 	status["can_double_jump"] = true
+	velocity.y = 0
+	velocity.x = 0
+	
+	
+func tp():
+	global_position = tp_location
+	reset()
+
+func take_domage():
+	tp()

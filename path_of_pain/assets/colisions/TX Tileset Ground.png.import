@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xp3dliotu61"
-path="res://.godot/imported/knight.png-b33800fb7ddfd7bcabc4517f1e9e68e8.ctex"
+uid="uid://cil3yaqxb2jxx"
+path="res://.godot/imported/TX Tileset Ground.png-11756d4e7f78fda8533fde6ea9a223ef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/knight.png"
-dest_files=["res://.godot/imported/knight.png-b33800fb7ddfd7bcabc4517f1e9e68e8.ctex"]
+source_file="res://assets/colisions/TX Tileset Ground.png"
+dest_files=["res://.godot/imported/TX Tileset Ground.png-11756d4e7f78fda8533fde6ea9a223ef.ctex"]
 
 [params]
 
